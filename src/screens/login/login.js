@@ -8,17 +8,35 @@ const Login = () => {
     password: ""
   });
 
+  const [err, setError] = useState("");
+
   const handleOnChange = ({ target: { name, value } }) => {
     setForm({ ...form, [name]: value });
   };
 
   const handleLoginSubmit = (_) => {
+    setError("");
     const submission = {
       ...form,
       password: md5(form.password)
     };
-    console.log(submission);
+    const users = JSON.parse(localStorage.getItem("users"));
+    const user = users.find((item) => {
+      return item.username === submission.username;
+    });
+    const loginSuccessful = user
+      ? user.password === submission.password
+        ? true
+        : false
+      : false;
+    if (loginSuccessful) {
+      localStorage.setItem("loggedInUser", user.username);
+    } else {
+      setError("Login unsuccessful");
+    }
   };
+
+  console.log("Login unsuccessful:", err);
 
   return (
     <>
@@ -45,6 +63,8 @@ const Login = () => {
           />
         </Form.Field>
         <Button type="submit">Submit</Button>
+
+        {err && <h2>error</h2>}
       </Form>
     </>
   );
