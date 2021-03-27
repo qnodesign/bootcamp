@@ -1,6 +1,7 @@
 import { useState } from "react";
 import md5 from "md5";
 import { Form, Button } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -13,6 +14,8 @@ const Login = () => {
   const handleOnChange = ({ target: { name, value } }) => {
     setForm({ ...form, [name]: value });
   };
+
+  const history = useHistory();
 
   const handleLoginSubmit = (_) => {
     setError("");
@@ -31,6 +34,7 @@ const Login = () => {
       : false;
     if (loginSuccessful) {
       localStorage.setItem("loggedInUser", user.username);
+      history.push("/profile");
     } else {
       setError("Login unsuccessful");
     }
